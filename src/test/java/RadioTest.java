@@ -4,10 +4,27 @@ import static org.junit.jupiter.api.Assertions.*;
 class RadioTest {
 
     @Test
-    void shouldSetStationWithinRange() {
+    void shouldCreateDefaultRadioWith10Stations() {
         Radio radio = new Radio();
-        radio.setCurrentStation(5);
-        assertEquals(5, radio.getCurrentStation());
+        assertEquals(9, radio.getMaxStation());
+    }
+
+    @Test
+    void shouldCreateCustomRadioWith30Stations() {
+        Radio radio = new Radio(30);
+        assertEquals(29, radio.getMaxStation());
+    }
+
+    @Test
+    void shouldThrowExceptionForInvalidStationCount() {
+        assertThrows(IllegalArgumentException.class, () -> new Radio(0));
+    }
+
+    @Test
+    void shouldSetStationWithinRange() {
+        Radio radio = new Radio(20);
+        radio.setCurrentStation(15);
+        assertEquals(15, radio.getCurrentStation());
     }
 
     @Test
@@ -19,7 +36,7 @@ class RadioTest {
 
     @Test
     void shouldNotSetStationAboveMax() {
-        Radio radio = new Radio();
+        Radio radio = new Radio(5);
         radio.setCurrentStation(10);
         assertEquals(0, radio.getCurrentStation());
     }
@@ -34,8 +51,8 @@ class RadioTest {
 
     @Test
     void shouldSwitchToZeroAfterMaxStation() {
-        Radio radio = new Radio();
-        radio.setCurrentStation(9);
+        Radio radio = new Radio(15);
+        radio.setCurrentStation(14); // Последняя станция для 15 станций
         radio.nextStation();
         assertEquals(0, radio.getCurrentStation());
     }
@@ -50,10 +67,10 @@ class RadioTest {
 
     @Test
     void shouldSwitchToMaxAfterZeroStation() {
-        Radio radio = new Radio();
+        Radio radio = new Radio(8);
         radio.setCurrentStation(0);
         radio.prevStation();
-        assertEquals(9, radio.getCurrentStation());
+        assertEquals(7, radio.getCurrentStation());
     }
 
     @Test
